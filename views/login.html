@@ -1,0 +1,28 @@
+{{template "header"}}
+<title>login</title>
+</head>
+<body style="background: #e0e0e0">
+
+<div style="margin-left: 35% ; margin-right: 35% ; margin-top: 10%">
+        <form method="post" action="/login">
+        <h2 class="form-signin-heading">用户登录</h2>
+        <input type="text" id="inputEmail" class="form-control"  placeholder="用户名" required="" autofocus="" name="username">
+        <label for="inputPassword" class="sr-only"></label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="密码" required="" name="pwd"  style="margin-top: 10px">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me" name="autologin"> 记住登录
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    </form>
+    <button class="btn btn-lg btn-primary btn-block" onclick="toHome()"  style="margin-top: 20px">返回</button>
+</div>
+<script>
+    function toHome() {
+        window.location.href = "/"
+        return false
+    }
+</script>
+</body>
+</html>

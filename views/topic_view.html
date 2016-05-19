@@ -1,0 +1,60 @@
+{{template "header"}}
+<title>Allen blog</title>
+</head>
+
+<body>
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+    {{template "nav" .}}
+</div>
+</div>
+    <div class="container" style="margin-left: 10%;margin-right:10px ;margin-top: 100px ">
+        <div class="panel panel-default">
+            <div class="panel-body" style="margin-top: 0px">
+                {{$labels := .Labels}}
+                {{with .Topic}}
+                <div class="page-header">
+                    <h1><small>{{.Title}}</small></h1>
+                    <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                        {{range $labels}}
+                        <a type="button" class="btn btn-default " href="/?label={{.}}">{{.}}</a>
+                        {{end}}
+                    </div>
+
+                </div>
+                <div class="panel panel-default">
+                    {{.Content}}
+                </div>
+                {{end}}
+                {{if .IsLogin}}
+                <a href="/topic/modify?tid={{.Id}}" class="btn btn-success btn-default">修改文章</a>
+                <a href="/topic/delete?tid={{.Id}}" class="btn btn-danger btn-default">删除</a>
+                {{end}}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <h2>评论：</h2>
+            {{$tid := .Topic.Id}}
+            {{range .Replys}}
+            <div class="panel panel-default" style="margin-right: 5%;margin-left: 5%">
+                <h5>名称：{{.Name}}</h5>
+                <div class="panel panel-default" style="margin-right: 5%;margin-left: 5%">
+                    {{.Content}}
+                </div>
+                <a class="btn btn-danger btn-default" href="/reply/delete?tid={{$tid}}&rid={{.Id}}">删除</a>
+            </div>
+            {{end}}
+        </div>
+        <form class="panel panel-default" method="post" action="/reply/add" >
+            <div style="margin-right: 100px;margin-left: 100px">
+            <h4>名称</h4>
+            <input class="form-control" placeholder="输入你的名称" name="guest_name">
+                <input type="hidden" name = "tid" value="{{.Id}}">
+            <h4>评论内容</h4>
+            <textarea name="content" cols="30" rows="10" style="width: 100%" class="form-control"></textarea>
+                <button class="btn btn-success" type="submit" style="margin-bottom: 10px">发表评论</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
