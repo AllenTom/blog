@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"blog/models"
+	"path"
 )
 
 type TopicController struct  {
@@ -29,12 +30,27 @@ func (c *TopicController) Post() {
 	content := c.Input().Get("content")
 	category := c.Input().Get("category")
 	label := c.Input().Get("label")
-	var err error
+
+	//附件
+	_,fh,err := c.GetFile("attachment")
+	if err != nil {
+		beego.Error(err)
+	}
+	var attachment string
+	if fh != nil{
+		attachment = fh.Filename
+		beego.Info(attachment)
+		err = c.SaveToFile("attachment",path.Join("attachment",attachment))
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
 	tid := c.Input().Get("tid")
 	if len(tid) != 0{
-		models.ModifyTopic(tid,title,content,category,label)
+		models.ModifyTopic(tid,title,content,category,label,attachment)
 	}else {
-		err = models.AddTopic(title, content,category,label)
+		err = models.AddTopic(title, content,category,label,attachment)
 		if err != nil {
 			beego.Error(err)
 		}

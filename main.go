@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	_ "blog/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -22,6 +23,9 @@ func main() {
 	beego.AutoRouter(&controllers.TopicController{})
 	beego.Router("/topic/view",&controllers.TopicViewController{})
 	orm.RunSyncdb("default",false,true)
+	os.Mkdir("attachment",os.ModePerm)
+	//beego.SetStaticPath("/attachment","attachment")
+	beego.Router("/attachment/:all",&controllers.AttachControllers{})
 	beego.Run()
 }
 

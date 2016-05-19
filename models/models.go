@@ -41,17 +41,18 @@ type Topic struct {
 	Created         time.Time `orm:"index"`
 	Updated         time.Time `orm:"index"`
 	Category        string
-	Labels			string
+	Labels          string
 	Views           int64     `orm:"index"`
 	Author          string
 	ReplyTime       time.Time `orm:"index"`
 	ReplyCount      int64
 	ReplyLastUserId int64
 }
-func AddReply(tid,name,content string) error{
+
+func AddReply(tid, name, content string) error {
 	tidNum, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {
-		return  err
+		return err
 	}
 	o := orm.NewOrm()
 	reply := &Reply{
@@ -60,14 +61,14 @@ func AddReply(tid,name,content string) error{
 		Content:content,
 		Time:time.Now(),
 	}
-	_,err = o.Insert(reply)
+	_, err = o.Insert(reply)
 	if err != nil {
 		return err
 	}
 	//取出对应用户id
 	replys := new(Reply)
 	qss := o.QueryTable("reply")
-	err = qss.Filter("name",name).One(replys)
+	err = qss.Filter("name", name).One(replys)
 	LastReplyId := replys.Id
 	topic := &Topic{
 		Id : tidNum,
@@ -80,18 +81,18 @@ func AddReply(tid,name,content string) error{
 	}
 	return err
 }
-func DeleteReply(rid,tid string) error{
+func DeleteReply(rid, tid string) error {
 	ridNum, err := strconv.ParseInt(rid, 10, 64)
 	if err != nil {
-		return  err
+		return err
 	}
 	tidNum, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {
-		return  err
+		return err
 	}
 	o := orm.NewOrm()
 	reply := &Reply{Id:ridNum}
-	_,err = o.Delete(reply)
+	_, err = o.Delete(reply)
 	if err != nil {
 		return err
 	}
@@ -119,20 +120,20 @@ func GetTopicView(tid string) (*Topic, error) {
 		return nil, err
 	}
 	topic.Labels = strings.Replace(strings.Replace(strings.Replace(
-		topic.Labels, "#$", " ", -1), "$", "", -1),"#","",-1)
+		topic.Labels, "#$", " ", -1), "$", "", -1), "#", "", -1)
 	return topic, err
 }
-func GetReplys(tid int64) ([]*Reply,error){
+func GetReplys(tid int64) ([]*Reply, error) {
 
 	o := orm.NewOrm()
-	replys  := make([]*Reply,0)
+	replys := make([]*Reply, 0)
 	qs := o.QueryTable("reply")
-	_,err := qs.Filter("tid",tid).OrderBy("-time").All(&replys)
-	return replys,err
+	_, err := qs.Filter("tid", tid).OrderBy("-time").All(&replys)
+	return replys, err
 }
-func AddTopic(title, content, category,labels string) error {
+func AddTopic(title, content, category, labels, attachment string) error {
 	//tags
-	labels = "$" + strings.Join(strings.Split(labels," "), "#$") + "#"
+	labels = "$" + strings.Join(strings.Split(labels, " "), "#$") + "#"
 
 	o := orm.NewOrm()
 	topic := &Topic{
@@ -140,6 +141,7 @@ func AddTopic(title, content, category,labels string) error {
 		Content:content,
 		Created:time.Now(),
 		Updated:time.Now(),
+		Attachment:attachment,
 		Category:category,
 		Labels:labels,
 		ReplyTime:time.Now(),
@@ -157,10 +159,10 @@ func AddTopic(title, content, category,labels string) error {
 		// 如果不存在我们就直接忽略，只当分类存在时进行更新
 		cate.TopicCount++
 		_, err = o.Update(cate)
-	}else{
+	} else {
 		cate := new(Category)
 		qs := o.QueryTable("category")
-		err = qs.Filter("title",category).One(cate)
+		err = qs.Filter("title", category).One(cate)
 		if err == nil {
 			cate.TopicCount++
 			_, err = o.Update(cate)
@@ -169,22 +171,24 @@ func AddTopic(title, content, category,labels string) error {
 
 	return err
 }
-func ModifyTopic(tid, title, content, category,labels string) error {
-	labels = "$" + strings.Join(strings.Split(labels," "),"#$") + "#"
+func ModifyTopic(tid, title, content, category, labels, attachment string) error {
+	labels = "$" + strings.Join(strings.Split(labels, " "), "#$") + "#"
 	tidNum, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {
 		return err
 	}
-	var elderCate string
+	var elderCate, elderAttachment string
 	o := orm.NewOrm()
 	topic := &Topic{
 		Id : tidNum,
 	}
 	if o.Read(topic) == nil {
 		elderCate = topic.Category
+		elderAttachment = topic.Attachment
 		topic.Title = title
 		topic.Content = content
 		topic.Category = category
+		topic.Attachment = attachment
 		topic.Labels = labels
 		topic.Updated = time.Now()
 		_, err = o.Update(topic)
@@ -203,6 +207,11 @@ func ModifyTopic(tid, title, content, category,labels string) error {
 		}
 	}
 
+	//删除附件
+	if len(elderAttachment) > 0{
+		os.Remove(path.Join("attachment",elderAttachment))
+	}
+
 	cate := new(Category)
 	qs := o.QueryTable("category")
 	err = qs.Filter("title", category).One(cate)
@@ -214,7 +223,7 @@ func ModifyTopic(tid, title, content, category,labels string) error {
 
 	return err
 }
-func GetTopic(isDesc  bool,category,label string) ([]*Topic, error) {
+func GetTopic(isDesc  bool, category, label string) ([]*Topic, error) {
 	o := orm.NewOrm()
 	topics := make([]*Topic, 0)
 	qs := o.QueryTable("topic")
@@ -223,8 +232,8 @@ func GetTopic(isDesc  bool,category,label string) ([]*Topic, error) {
 		if len(category) > 0 {
 			qs = qs.Filter("category", category)
 		}
-		if len(label) > 0{
-			qs = qs.Filter("labels__contains","$"+label+"#")
+		if len(label) > 0 {
+			qs = qs.Filter("labels__contains", "$" + label + "#")
 		}
 		_, err = qs.OrderBy("-created").All(&topics)
 
@@ -239,7 +248,7 @@ func RegisterDB() {
 		os.MkdirAll(path.Dir(_DB_NAME), os.ModePerm)
 		os.Create(_DB_NAME)
 	}
-	orm.RegisterModel(new(Category), new(Topic),new(Reply))
+	orm.RegisterModel(new(Category), new(Topic), new(Reply))
 	orm.RegisterDriver(_SQLITE3_DRIVER, orm.DRSqlite)
 	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)
 }
