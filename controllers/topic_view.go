@@ -10,7 +10,7 @@ type TopicViewController struct {
 	beego.Controller
 }
 func (c *TopicViewController) Get(){
-	c.TplName = "topic_view.html"
+	c.TplName = "test.html"
 	c.Data["IsLogin"] = checkAcc(c.Ctx)
 	tid := c.Input().Get("tid")
 	var err error

@@ -5,15 +5,14 @@ import (
 	"time"
 	"path"
 	"strings"
-	"github.com/Unknwon/com"
+	_"github.com/go-sql-driver/mysql"
 	"github.com/astaxie/beego/orm"
 	_"github.com/mattn/go-sqlite3"
 	"strconv"
 )
 
 const (
-	_DB_NAME = "Database/blog.db"
-	_SQLITE3_DRIVER = "sqlite3"
+	_MYSQL = "mysql"
 )
 
 type Category struct {
@@ -47,6 +46,14 @@ type Topic struct {
 	ReplyTime       time.Time `orm:"index"`
 	ReplyCount      int64
 	ReplyLastUserId int64
+}
+type User struct {
+	Id       int64
+	UserName string
+	Pwd      string
+	NickName string
+	Email    string
+	PersonalInfo string
 }
 
 func AddReply(tid, name, content string) error {
@@ -208,8 +215,8 @@ func ModifyTopic(tid, title, content, category, labels, attachment string) error
 	}
 
 	//删除附件
-	if len(elderAttachment) > 0{
-		os.Remove(path.Join("attachment",elderAttachment))
+	if len(elderAttachment) > 0 {
+		os.Remove(path.Join("attachment", elderAttachment))
 	}
 
 	cate := new(Category)
@@ -244,13 +251,15 @@ func GetTopic(isDesc  bool, category, label string) ([]*Topic, error) {
 	return topics, err
 }
 func RegisterDB() {
-	if !com.IsExist(_DB_NAME) {
-		os.MkdirAll(path.Dir(_DB_NAME), os.ModePerm)
-		os.Create(_DB_NAME)
-	}
-	orm.RegisterModel(new(Category), new(Topic), new(Reply))
-	orm.RegisterDriver(_SQLITE3_DRIVER, orm.DRSqlite)
-	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)
+	/*	if !com.IsExist(_DB_NAME) {
+			os.MkdirAll(path.Dir(_DB_NAME), os.ModePerm)
+			os.Create(_DB_NAME)
+		}*/
+	orm.RegisterModel(new(Category), new(Topic), new(Reply),new(User))
+	/*orm.RegisterDriver(_MYSQL, orm.DRMySQL)
+	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)*/
+	orm.RegisterDriver("mysql", orm.DRMySQL)
+	orm.RegisterDataBase("default", "mysql", "root:dzh17217@tcp(127.0.0.1:3306)/myblog?charset=utf8&loc=Asia%2FChongqing", 30, 200)
 }
 
 func AddCategory(name string) error {
