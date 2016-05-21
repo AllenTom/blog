@@ -18,6 +18,11 @@
     <a class="item" href="/topic">
         文章
     </a>
+    {{if .IsLogin}}
+    <a class="item" href="/category">
+        分类
+    </a>
+    {{end}}
     <a >
         <form class="ui action input" style="margin-top: 10px;margin-left: 10px">
             <input type="text" placeholder="Search...">
@@ -29,7 +34,7 @@
 
     <div class="right menu">
         {{if .IsLogin}}
-        <a class="item">
+        <a class="item" href="/account/setting">
             账户管理
         </a>
         {{end}}
@@ -44,8 +49,22 @@
 </div>
 <div class="main" style="margin-top: 80px ; background: #EEEEEE">
 
-    <div style="width: 20% ;float: left ;background: #00e5ff ">
-        wefwefwefwe
+    <div style="width: 20% ;float: left ;">
+        <div class="ui card" style="margin-left: 4px">
+            <div class="image">
+                <img src="/static/img/shortcut-icon.png">
+            </div>
+            <div class="content">
+                <a class="header">Allen</a>
+                <div class="meta">
+                    <span class="date">2016</span>
+                </div>
+                <div class="description">Kristy is an art director living in New York. </div>
+            </div>
+            <div class="extra content">
+                <a><i class="user icon"></i> 22 Friends </a>
+            </div>
+        </div>
     </div>
     <div style="width: 58% ;float: left ;margin-left: 1%">
         <div class="ui card" style="width: 100%">

@@ -21,6 +21,7 @@ func main() {
 	beego.Router("/reply/add", &controllers.ReplyControllers{}, "post:Add")
 	beego.Router("/reply/delete", &controllers.ReplyControllers{}, "get:Delete")
 	beego.AutoRouter(&controllers.TopicController{})
+	beego.Router("/account/setting",&controllers.AccountControllers{})
 	beego.Router("/topic/view",&controllers.TopicViewController{})
 	orm.RunSyncdb("default",false,true)
 	os.Mkdir("attachment",os.ModePerm)

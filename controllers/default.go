@@ -15,7 +15,6 @@ func (c *MainController) Get() {
 	c.TplName = "home.html"
 	c.Data["IsLogin"] = checkAcc(c.Ctx)
 	topcount,err := models.GetTopic(true,"","")
-	beego.Info(info)
 	c.Data["AllCount"] = len(topcount)
 	c.Data["Categories"],err = models.GetCategory()
 	if err != nil {

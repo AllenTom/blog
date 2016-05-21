@@ -70,6 +70,7 @@ func (this *TopicController) Modify() {
 	if !checkAcc(this.Ctx){
 		this.Redirect("/login",302)
 	}
+	this.Data["IsLogin"] = checkAcc(this.Ctx)
 	this.TplName = "topic_modify.html"
 	tid := this.Input().Get("tid")
 	topic, err := models.GetTopicView(tid)
