@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	_"github.com/mattn/go-sqlite3"
 	"strconv"
+	"github.com/astaxie/beego"
 )
 
 const (
@@ -40,6 +41,7 @@ type Topic struct {
 	Created         time.Time `orm:"index"`
 	Updated         time.Time `orm:"index"`
 	Category        string
+	TopicType       string
 	Labels          string
 	Views           int64     `orm:"index"`
 	Author          string
@@ -48,11 +50,11 @@ type Topic struct {
 	ReplyLastUserId int64
 }
 type User struct {
-	Id       int64
-	UserName string
-	Pwd      string
-	NickName string
-	Email    string
+	Id           int64
+	UserName     string
+	Pwd          string
+	NickName     string
+	Email        string
 	PersonalInfo string
 }
 
@@ -250,16 +252,16 @@ func GetTopic(isDesc  bool, category, label string) ([]*Topic, error) {
 
 	return topics, err
 }
+
 func RegisterDB() {
-	/*	if !com.IsExist(_DB_NAME) {
-			os.MkdirAll(path.Dir(_DB_NAME), os.ModePerm)
-			os.Create(_DB_NAME)
-		}*/
-	orm.RegisterModel(new(Category), new(Topic), new(Reply),new(User))
-	/*orm.RegisterDriver(_MYSQL, orm.DRMySQL)
-	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)*/
+	var _DB_USERNAME = beego.AppConfig.String("mysqluser")
+	var _DB_PWD = beego.AppConfig.String("mysqlpwd")
+	var _DB_URL = beego.AppConfig.String("mysqlurl")
+	var _DB_PORT = beego.AppConfig.String("mysqlport")
+	var _DB_NAME = beego.AppConfig.String("mysqldb")
+	orm.RegisterModel(new(Category), new(Topic), new(Reply), new(User))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	orm.RegisterDataBase("default", "mysql", "root:dzh17217@tcp(127.0.0.1:3306)/myblog?charset=utf8&loc=Asia%2FChongqing", 30, 200)
+	orm.RegisterDataBase("default", "mysql", _DB_USERNAME + ":" + _DB_PWD + "@tcp(" + _DB_URL + ":" + _DB_PORT + ")/" + _DB_NAME + "?charset=utf8&loc=Asia%2FChongqing", 30, 200)
 }
 
 func AddCategory(name string) error {
