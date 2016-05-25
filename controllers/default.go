@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"blog/models"
 	"strconv"
+	"blog/controllers/ExtraUnit"
 )
 
 type MainController struct {
@@ -11,6 +12,7 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
+	controllers.InitTimeFunc()
 	var err error
 	c.Data["IsHome"] = true
 	c.TplName = "home.html"
@@ -30,6 +32,7 @@ func (c *MainController) Get() {
 	topics,err := models.GetTopic(true,show,label)
 	c.Data["topics"] = topics
 
+
 	//分页
 	page := c.Input().Get("page")
 	pageNum, err := strconv.ParseInt(page, 10, 64)
@@ -46,3 +49,4 @@ func (c *MainController) Get() {
 		}
 	}
 }
+

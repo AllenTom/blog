@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"blog/models"
 	"path"
+	"blog/controllers/ExtraUnit"
 )
 
 type TopicController struct  {
@@ -12,6 +13,7 @@ type TopicController struct  {
 }
 
 func (c *TopicController) Get(){
+	controllers.InitTimeFunc()
 	c.Data["IsTopic"] = true
 	c.TplName = "topic.html"
 	c.Data["IsLogin"] = checkAcc(c.Ctx)

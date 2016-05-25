@@ -284,7 +284,6 @@ func GetTopic(isDesc  bool, category, label string) ([]*Topic, error) {
 	} else {
 		_, err = qs.All(&topics)
 	}
-
 	return topics, err
 }
 func RegisterDB() {
