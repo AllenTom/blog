@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"blog/models"
+	"strconv"
 )
 
 type MainController struct {
@@ -20,11 +21,28 @@ func (c *MainController) Get() {
 	if err != nil {
 		beego.Error(err)
 	}
-
+	//获取账户信息
+	c.Data["Account"] = models.ReadUserInfo()
 
 	//分类显示
 	show := c.Input().Get("show")
 	label := c.Input().Get("label")
-	c.Data["topics"],err = models.GetTopic(true,show,label)
+	topics,err := models.GetTopic(true,show,label)
+	c.Data["topics"] = topics
 
+	//分页
+	page := c.Input().Get("page")
+	pageNum, err := strconv.ParseInt(page, 10, 64)
+	pages := make([]int,5,5)
+	pageCount := (len(topics) / 10) + 1
+	if (len(page) == 0){
+		pageNum = 0
+	}
+	pageNum = 0
+	for x := 0; x < 5 ;x++{
+		pages[x] = int(pageNum) + x
+		if(pages[x] == pageCount){
+			break
+		}
+	}
 }

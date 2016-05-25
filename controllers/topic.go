@@ -16,10 +16,19 @@ func (c *TopicController) Get(){
 	c.TplName = "topic.html"
 	c.Data["IsLogin"] = checkAcc(c.Ctx)
 	var err error
-	c.Data["Topics"] ,err = models.GetTopic(false,"","")
+
+	c.Data["Categories"],err = models.GetCategory()
 	if err != nil {
 		beego.Error(err)
 	}
+	cate := c.Input().Get("cate")
+	c.Data["Topics"] ,err = models.GetTopic(false,cate,"")
+	if err != nil {
+		beego.Error(err)
+	}
+	//获取账户信息
+	c.Data["Account"] = models.ReadUserInfo()
+
 }
 func (c *TopicController) Post() {
 	if !checkAcc(c.Ctx){
@@ -30,7 +39,6 @@ func (c *TopicController) Post() {
 	content := c.Input().Get("content")
 	category := c.Input().Get("category")
 	label := c.Input().Get("label")
-
 	//附件
 	_,fh,err := c.GetFile("attachment")
 	if err != nil {
@@ -39,7 +47,6 @@ func (c *TopicController) Post() {
 	var attachment string
 	if fh != nil{
 		attachment = fh.Filename
-		beego.Info(attachment)
 		err = c.SaveToFile("attachment",path.Join("attachment",attachment))
 		if err != nil {
 			beego.Error(err)

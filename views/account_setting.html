@@ -20,8 +20,8 @@
 <body>
 <div class="ui large menu fixed">
     <a class="item">
-        <img class="ui avatar image" src="/static/img/shortcut-icon.png">
-        <span>Allen</span>
+        <img class="ui avatar image" src="/static/img/user_avatar.png">
+        <span>{{.Account.Name}}</span>
     </a>
     <a class=" item" href="/">
         主页
@@ -55,32 +55,248 @@
 </div>
 <div class="container" style="margin-top: 80px ; padding: 0 10% 0 10%">
     <div class="ui card" style="width: 100% ; padding: 3%">
-        <div class="ui form">
+        {{with .Account}}
+        <form class="ui form" action="/account/setting" method="post" enctype="multipart/form-data">
             <div class="inline fields">
                 <div class="three wide field">
-                    <img src="/static/img/shortcut-icon.png" style="width: 100px;height: 100px">
+                    <img src="/static/img/user_avatar.png" style="width: 100px;height: 100px">
                 </div>
                 <div class="eight wide field">
-                    <h1>Allen</h1>
+                    <h1>{{.Name}}</h1>
                 </div>
             </div>
-            <input type="file" placeholder="">
+            <input type="file" placeholder="" name="attachment">
             <div style="width: 100% ; height: 1px ; background: grey ; margin-top: 10px"></div>
 
             <div class="inline fields">
                 <div class="eight wide field">
                     <label>昵称</label>
                 </div>
+                <div class="three wide field">
+                    <label>性别</label>
+                </div>
+                <div class="five wide field">
+                    <label>来自</label>
+                </div>
             </div>
             <div class="inline fields">
                 <div class="eight wide field">
-                    <input type="text" placeholder="ID" name="username">
+                    <input type="text" placeholder="ID" name="username" value="{{.Name}}">
+                </div>
+                <div class="three wide field">
+                    <select class="ui dropdown" name="sex">
+                        <option value="">Gender</option>
+                        <option value="1">Male</option>
+                        <option value="0">Female</option>
+                    </select>
+                </div>
+                <div class="five wide field">
+                    <input type="text" placeholder="Home" name="username">
                 </div>
             </div>
+            <div class="inline fields">
 
-        </div>
+            </div>
+            <div class="inline fields">
+                <div class="one wide field">
+                    <input type="text" name="birthday_year" value="{{.BirthdayYear}}">
+                </div>
+                <label>年</label>
+                <select class="ui dropdown" name="birthday_month">
+                    <option value="">Gender</option>
+                    <option value="1">1月</option>
+                    <option value="2">2月</option>
+                    <option value="3">3月</option>
+                    <option value="4">4月</option>
+                    <option value="5">5月</option>
+                    <option value="6">6月</option>
+                    <option value="7">7月</option>
+                    <option value="8">8月</option>
+                    <option value="9">9月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                </select>
+                <label>月</label>
+                <select class="ui dropdown" name="birthday_day">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+
+                </select>
+                <label>日</label>
+
+                <div class="four wide field">
+                    <div class="ui left icon input">
+                        <input type="text" placeholder="所属单位" name="organization" value="{{.Organization}}">
+                        <i class="building icon"></i>
+                    </div>
+                </div>
+                <div class="four wide field">
+                    <div class="ui left icon input">
+                        <input type="text" placeholder="职位" name="position" value="{{.Position}}">
+                        <i class="users icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            <div class="ui accordion field">
+                <div class="title active"><i class="icon dropdown"></i> 社交信息</div>
+                <div class="content field ">
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="QQ" name="qq_number" value="{{.Qq_number}}">
+                                <i class="qq icon"></i>
+                            </div>
+                        </div>
+                        <div class="six wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="邮箱" name="mail" value="{{.Email}}">
+                                <i class="mail outline icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Google Plus ID" name="google_id" value="{{.Google_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Google Plus Private Site" name="google_web" value="{{.Google_web}}">
+                                <i class="google icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Twitter ID" name="twitter_web" value="{{.Twitter_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Twitter Private Site" name="twitter_web" value="{{.Twitter_web}}">
+                                <i class="twitter icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Facebook ID" name="facebook_id" value="{{.Facebook_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Facebook Private Site" name="facebook_web" value="{{.Facebook_web}}">
+                                <i class="facebook icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="GitHub ID" name="github_id" value="{{.Github_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="GitHub Private Site" name="github_web" value="{{.Github_web}}">
+                                <i class="github icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Sina Weibo ID" name="weibo_id" value="{{.Weibo_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Sina Weibo Site" name="weibo_web" value="{{.Weibo_web}}">
+                                <i class="weibo icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Linkedin ID" name="linkedin_id" value="{{.Linkedin_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Linkedin Site" name="linkedin_web" value="{{.Linkedin_web}}">
+                                <i class="linkedin icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Tumblr ID" name="tumblr_id" value="{{.Tumblr_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Tumblr Site" name="tumblr_web" value="{{.Tumblr_id}}">
+                                <i class="tumblr icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="three wide field">
+                            <input type="text" placeholder="Steam ID" name="steam_id" value="{{.Steam_id}}">
+                            <label>@</label>
+                        </div>
+                        <div class="ten wide field">
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="Steam Site" name="steam_web" value="{{.Steam_web}}">
+                                <i class="steam icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui left icon input" style="width: 100%">
+                <input type="text" placeholder="主页自定义信息" name="home_message" value="{{.Home_message}}">
+                <i class="feed icon"></i>
+            </div>
+            <div class="field">
+                <label>个人简介</label>
+                <textarea name="private_intro" >{{.Private_intro}}</textarea>
+            </div>
+            <button class="positive ui button" type="submit">提交</button>
+        </form>
+        {{end}}
+
     </div>
 </div>
-
+<script src="/static/js/account_setting.js"></script>
 </body>
 </html>

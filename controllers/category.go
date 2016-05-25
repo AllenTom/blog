@@ -44,6 +44,8 @@ func (c *CategoryController) Get(){
 	}
 	c.Data["IsLogin"] = checkAcc(c.Ctx)
 	c.Data["IsCategory"] = true
+	//获取账户信息
+	c.Data["Account"] = models.ReadUserInfo()
 
 }
 

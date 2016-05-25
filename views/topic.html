@@ -17,8 +17,8 @@
 <body>
 <div class="ui large menu fixed">
     <a class="item">
-        <img class="ui avatar image" src="/static/img/shortcut-icon.png">
-        <span>Allen</span>
+        <img class="ui avatar image" src="/static/img/user_avatar.png">
+        <span>{{.Account.Name}}</span>
     </a>
     <a class="item" href="/">
         主页
@@ -57,16 +57,32 @@
 </div>
 <div class="container" style="margin-top: 80px ; padding: 0 10% 0 10%">
     <div class="content">
-        <div class="ui teal buttons">
-            <div class="ui button">Toggle</div>
-            <div class="ui floating dropdown icon button">
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <div class="item" data-value="drop">Drop</div>
-                    <div class="item" data-value="horizontal flip">Horizontal Flip</div>
-                    <div class="item" data-value="fade up">Fade Up</div>
-                    <div class="item" data-value="scale">Scale</div>
+        <div class="ui floating labeled icon dropdown button">
+            <i class="filter icon"></i>
+            <span class="text">{{.cate}}</span>
+            <div class="menu">
+                <div class="header">
+                    搜索标签
                 </div>
+                <div class="ui icon search input">
+                    <i class="search icon"></i>
+                    <input type="text" name="search" placeholder="Search...">
+                </div>
+                <div class="header">
+                    <i class="tags icon"></i>
+                    标签过滤
+                </div>
+                <div class="divider"></div>
+                <a class="item" href="/topic">
+                    <i class="tags icon"></i>
+                    <label>所有</label>
+                </a>
+                {{range .Categories}}
+                <a class="item" href="/topic?cate={{.Title}}">
+                    <i class="tags icon"></i>
+                    <i>{{.Title}}</i>
+                </a>
+                {{end}}
             </div>
         </div>
         <table class="ui celled table">
@@ -99,5 +115,13 @@
         <a class="positive ui button" type="submit" href="/topic/add">新增文章</a>
     </div>
 </div>
+<script>
+    $('.dropdown')
+            .dropdown({
+                // 你可以使用任何过渡
+                transition: 'drop'
+            })
+    ;
+</script>
 </body>
 </html>

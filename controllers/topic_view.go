@@ -22,5 +22,7 @@ func (c *TopicViewController) Get(){
 	if err != nil {
 		beego.Error(err)
 	}
+	//获取账户信息
+	c.Data["Account"] = models.ReadUserInfo()
 
 }

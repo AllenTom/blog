@@ -10,11 +10,43 @@ import (
 	_"github.com/mattn/go-sqlite3"
 	"strconv"
 	"github.com/astaxie/beego"
+	"encoding/json"
 )
 
 const (
 	_MYSQL = "mysql"
 )
+
+type Account struct {
+	UserAvatar    string
+	Name          string
+	Sex           int64
+	BirthdayYear  int64
+	BirthdayMonth int64
+	BirthdayDay   int64
+	Organization  string
+	Position      string
+	Qq_number     string
+	Email         string
+	Google_id     string
+	Google_web    string
+	Twitter_id    string
+	Twitter_web   string
+	Facebook_id   string
+	Facebook_web  string
+	Github_id     string
+	Github_web    string
+	Weibo_id      string
+	Weibo_web     string
+	Linkedin_id   string
+	Linkedin_web  string
+	Tumblr_id     string
+	Tumblr_web    string
+	Steam_id      string
+	Steam_web     string
+	Home_message  string
+	Private_intro string
+}
 
 type Category struct {
 	Id              int64
@@ -56,6 +88,11 @@ type User struct {
 	NickName     string
 	Email        string
 	PersonalInfo string
+}
+type Tag struct {
+	Id         int64
+	Name       string
+	TopicCount int64
 }
 
 func AddReply(tid, name, content string) error {
@@ -177,7 +214,6 @@ func AddTopic(title, content, category, labels, attachment string) error {
 			_, err = o.Update(cate)
 		}
 	}
-
 	return err
 }
 func ModifyTopic(tid, title, content, category, labels, attachment string) error {
@@ -245,24 +281,39 @@ func GetTopic(isDesc  bool, category, label string) ([]*Topic, error) {
 			qs = qs.Filter("labels__contains", "$" + label + "#")
 		}
 		_, err = qs.OrderBy("-created").All(&topics)
-
 	} else {
 		_, err = qs.All(&topics)
 	}
 
 	return topics, err
 }
-
 func RegisterDB() {
 	var _DB_USERNAME = beego.AppConfig.String("mysqluser")
 	var _DB_PWD = beego.AppConfig.String("mysqlpwd")
 	var _DB_URL = beego.AppConfig.String("mysqlurl")
 	var _DB_PORT = beego.AppConfig.String("mysqlport")
 	var _DB_NAME = beego.AppConfig.String("mysqldb")
-	orm.RegisterModel(new(Category), new(Topic), new(Reply), new(User))
+	orm.RegisterModel(new(Category), new(Topic), new(Reply), new(User), new(Tag))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", _DB_USERNAME + ":" + _DB_PWD + "@tcp(" + _DB_URL + ":" + _DB_PORT + ")/" + _DB_NAME + "?charset=utf8&loc=Asia%2FChongqing", 30, 200)
 }
+/*func SaveTopicTag(tid int64,tags string){
+	taglist := strings.Split(tags," ")
+	o := orm.NewOrm()
+	o.QueryTable("tag")
+	var err error
+	for x := range taglist {
+		tag := new(Tag)
+		tag.Name = taglist[x]
+		err = o.Read(&tag)
+		if err == orm.ErrNoRows{
+			o.Insert(tag)
+		}else {
+			tag.TopicCount++
+			_,err = o.Update(tag)
+		}
+	}
+}*/
 
 func AddCategory(name string) error {
 	o := orm.NewOrm()
@@ -311,4 +362,23 @@ func DeleteTopic(id string) error {
 	_, err = o.Delete(cate)
 
 	return err
+}
+func SaveUserInfo(account Account) {
+	userFile := "AccInfo.json"
+	fout, err := os.Create(userFile)
+	if err != nil {
+		beego.Info(err)
+	}
+	b, err := json.Marshal(account)
+	fout.Write(b)
+}
+func ReadUserInfo() *Account{
+	jsonfile, err := os.Open("AccInfo.json")
+	if err != nil {
+		beego.Error(err)
+	}
+	Account := new(Account)
+	UserInfo := json.NewDecoder(jsonfile)
+	UserInfo.Decode(&Account)
+	return Account
 }

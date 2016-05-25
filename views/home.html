@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css" rel="stylesheet">
+    <link href="/static/css/dropdown.css" rel="stylesheet">
+    <link href="/static/css/dropdown.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.js"></script>
+    <script src="/static/js/dropdown.min.js"></script>
+    <script src="/static/js/dropdown.js"></script>
+    <script src="//cdn.bootcss.com/semantic-ui/2.1.8/components/dropdown.min.js"></script>
+    <script src="/static/js/topic.js"></script>
 </head>
 <body>
 <div class="ui large menu fixed">
     <a class="item">
-        <img class="ui avatar image" src="/static/img/shortcut-icon.png">
-        <span>Allen</span>
+        <img class="ui avatar image" src="/static/img/user_avatar.png">
+        <span>{{.Account.Name}}</span>
     </a>
     <a class="active item" href="/">
         主页
@@ -23,7 +30,7 @@
         分类
     </a>
     {{end}}
-    <a >
+    <a>
         <form class="ui action input" style="margin-top: 10px;margin-left: 10px">
             <input type="text" placeholder="Search...">
             <button class="ui icon button">
@@ -33,10 +40,25 @@
     </a>
 
     <div class="right menu">
+
         {{if .IsLogin}}
-        <a class="item" href="/account/setting">
-            账户管理
-        </a>
+        <div class="ui pointing  dropdown link item">
+            <i class="dropdown icon"></i>
+            <span class="text">账户管理</span>
+            <div class="menu">
+                <div class="header">分类</div>
+                <div class="item">
+                    <i class="left dropdown icon"></i>
+                    <span class="text">账户管理</span>
+                    <div class="left menu">
+                        <a class="item" href="/account/setting">修改账户信息</a>
+                        <div class="item">修改登录信息</div>
+                    </div>
+                </div>
+                <div class="item">文章管理</div>
+                <div class="item">标签管理</div>
+            </div>
+        </div>
         {{end}}
         <div class="item">
             {{if .IsLogin}}
@@ -52,52 +74,132 @@
     <div style="width: 20% ;float: left ;">
         <div class="ui card" style="margin-left: 4px">
             <div class="image">
-                <img src="/static/img/shortcut-icon.png">
+                <img src="/static/img/user_avatar.png">
             </div>
             <div class="content">
-                <a class="header">Allen</a>
+                <a class="header">{{.Account.Name}}</a>
                 <div class="meta">
                     <span class="date">2016</span>
                 </div>
-                <div class="description">Kristy is an art director living in New York. </div>
             </div>
+            {{if .Account.Google_id}}
             <div class="extra content">
-                <a><i class="user icon"></i> 22 Friends </a>
+                <a href="{{.Account.Google_web}}"><i class="google icon"></i> {{.Account.Google_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Facebook_id}}
+            <div class="extra content">
+                <a href="{{.Account.Facebook_web}}"><i class="facebook icon"></i> {{.Account.Facebook_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Linkedin_id}}
+            <div class="extra content">
+                <a href="{{.Account.Linkedin_web}}"><i class="Tumblr icon"></i> {{.Account.Linkedin_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Twitter_id}}
+            <div class="extra content">
+                <a href="{{.Account.Twitter_web}}"><i class="facebook icon"></i> {{.Account.Twitter_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Weibo_id}}
+            <div class="extra content">
+                <a href="{{.Account.Weibo_web}}"><i class="weibo icon"></i> {{.Account.Weibo_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Github_id}}
+            <div class="extra content">
+                <a href="{{.Account.Github_web}}"><i class="github icon"></i> {{.Account.Github_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Tumblr_id}}
+            <div class="extra content">
+                <a href="{{.Account.Tumblr_web}}"><i class="tumblr icon"></i> {{.Account.Tumblr_id}} </a>
+            </div>
+            {{end}}
+            {{if .Account.Steam_id}}
+            <div class="extra content">
+                <a href="{{.Account.Steam_web}}"><i class="steam icon"></i> {{.Account.Steam_id}} </a>
+            </div>
+            {{end}}
+            <div class="extra content">
+                <div class="ui accordion field">
+                    <div class="title"><i class="icon dropdown"></i> Optional Details</div>
+                    <div class="content field">
+                        <div class="ui divider"></div>
+                        <div class="container" style="color: black">
+                            {{.Account.Private_intro}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div style="width: 58% ;float: left ;margin-left: 1%">
         <div class="ui card" style="width: 100%">
             <div class="content">
-                <img class="circular ui image " src="/static/img/shortcut-icon.png" style="width: 100px ;height: 100px">
+                <img class="circular ui image " src="/static/img/user_avatar.png" style="width: 100px ;height: 100px">
 
                 <div style="display: inline-block ; margin-left: 5%">
-                    wedwe
+                    <h1>{{.Account.Home_message}}</h1>
                 </div>
             </div>
         </div>
         {{range .topics}}
         <div class="ui card" style="width: 100%">
             <div class="content">
-                <div class="right floated meta">{{.Created}}</div><div class="header"><a href="/topic/view?tid={{.Id}}">{{.Title}}</a></div>
+                <div class="right floated meta">{{.Created}}</div>
+                <div class="header"><a href="/topic/view?tid={{.Id}}">{{.Title}}</a></div>
             </div>
             <div class="content" style="width: 100%">
                 {{.Content}}
             </div>
-            <div class="content"><span class="right floated"> <i class="unhide icon"></i> {{.Views}} </span> <i class="comment icon"></i> {{.ReplyCount}} </div>
+            <div class="content"><span class="right floated"> <i class="unhide icon"></i> {{.Views}} </span> <i
+                    class="comment icon"></i> {{.ReplyCount}}
+            </div>
         </div>
         {{end}}
+        <div class="ui field">
+            <div class="ui pagination menu">
+                <a class="item" href="/?page={{.pre}}">
+                    <
+                </a>
+                {{range .pages}}
+                <a class="item" href="/?page={{.}}">
+                    {{.}}
+                </a>
+                {{end}}
+                <a class="item " href="/?page={{.aft}}">
+                    >
+                </a>
+            </div>
+        </div>
     </div>
     <div style="width: 20% ;float: right ;">
 
         <div class="ui vertical menu" style="margin-left: 20%">
             <div class="item"><h5 style="color: teal">标签</h5></div>
-            <a class="active teal item" href="/">所有文章<div class="ui label">{{.AllCount}}</div></a>
+            <a class="active teal item" href="/">所有文章
+                <div class="ui label">{{.AllCount}}</div>
+            </a>
             {{range .Categories}}
-            <a class=" teal item" href="/?show={{.Title}}">{{.Title}}<div class="ui label">{{.TopicCount}}</div></a>
+            <a class=" teal item" href="/?show={{.Title}}">{{.Title}}
+                <div class="ui label">{{.TopicCount}}</div>
+            </a>
             {{end}}
         </div>
     </div>
 </div>
+<script>
+    $('.dropdown')
+            .dropdown({
+                // 你可以使用任何过渡
+                transition: 'drop'
+            })
+    ;
+    $('.ui.accordion')
+            .accordion()
+    ;
+</script>
 </body>
 </html>
