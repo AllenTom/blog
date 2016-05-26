@@ -4,12 +4,14 @@ import (
 	"github.com/astaxie/beego"
 	"blog/models"
 	"strings"
+	"blog/controllers/ExtraUnit"
 )
 
 type TopicViewController struct {
 	beego.Controller
 }
 func (c *TopicViewController) Get(){
+	controllers.InitTimeFunc()
 	c.TplName = "topic_view.html"
 	c.Data["IsLogin"] = checkAcc(c.Ctx)
 	tid := c.Input().Get("tid")

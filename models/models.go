@@ -366,7 +366,7 @@ func SaveUserInfo(account Account) {
 	userFile := "AccInfo.json"
 	fout, err := os.Create(userFile)
 	if err != nil {
-		beego.Info(err)
+		beego.Error(err)
 	}
 	b, err := json.Marshal(account)
 	fout.Write(b)

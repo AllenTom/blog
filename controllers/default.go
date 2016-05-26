@@ -32,21 +32,5 @@ func (c *MainController) Get() {
 	topics,err := models.GetTopic(true,show,label)
 	c.Data["topics"] = topics
 
-
-	//分页
-	page := c.Input().Get("page")
-	pageNum, err := strconv.ParseInt(page, 10, 64)
-	pages := make([]int,5,5)
-	pageCount := (len(topics) / 10) + 1
-	if (len(page) == 0){
-		pageNum = 0
-	}
-	pageNum = 0
-	for x := 0; x < 5 ;x++{
-		pages[x] = int(pageNum) + x
-		if(pages[x] == pageCount){
-			break
-		}
-	}
 }
 

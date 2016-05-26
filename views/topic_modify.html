@@ -73,8 +73,10 @@
         </div>
     </div>
 </div>
+
 <div class="container" style="margin-top: 80px ; padding: 0 10% 0 10%">
     <form class="ui card" style="width: 100% ; padding: 3%" method="post" action="/topic" enctype="multipart/form-data">
+        <input type="hidden" name="tid" value="{{.tid}}">
         <div class="ui form">
             <div class="field">
                 <label>标题</label>
